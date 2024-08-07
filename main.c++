@@ -11,18 +11,18 @@ public:
 
     // Constructor
     Sweet(string n, double p) {
-        name = n;
-        pricePerKg = p;
+        this->name = n;
+        this->pricePerKg = p;
     }
 
     // Member function to display details
     void displayDetails() {
-        cout << "Sweet: " << name << ", Price per kg: ₹" << pricePerKg << endl;
+        cout << "Sweet: " << this->name << ", Price per kg: ₹" << this->pricePerKg << endl;
     }
 
     // Member function to get the price per kg
     double getPricePerKg() {
-        return pricePerKg;
+        return this->pricePerKg;
     }
 };
 
@@ -35,24 +35,24 @@ public:
 
     // Constructor
     Customer(string n, double kgs) {
-        name = n;
-        kgsWanted = kgs;
-        totalCost = 0.0;
+        this->name = n;
+        this->kgsWanted = kgs;
+        this->totalCost = 0.0;
     }
 
     // Member function to display customer details
     void displayDetails() {
-        cout << "Customer: " << name << ", Wants: " << kgsWanted << " kg(s) of sweet, Total Cost: ₹" << totalCost << endl;
+        cout << "Customer: " << this->name << ", Wants: " << this->kgsWanted << " kg(s) of sweet, Total Cost: ₹" << this->totalCost << endl;
     }
 
     // Member function to update kgs wanted
     void updateKgsWanted(double newKgsWanted) {
-        kgsWanted = newKgsWanted;
+        this->kgsWanted = newKgsWanted;
     }
 
     // Member function to calculate the total cost
     void calculateTotalCost(Sweet& sweet) {
-        totalCost = kgsWanted * sweet.getPricePerKg();
+        this->totalCost = this->kgsWanted * sweet.getPricePerKg();
     }
 };
 
