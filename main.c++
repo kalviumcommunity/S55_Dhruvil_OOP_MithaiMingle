@@ -58,52 +58,63 @@ public:
 
 int main() {
     // Creating objects of Sweet class
-    Sweet kajuKatli("Kaju Katli", 1600.0);
-    Sweet mysorePak("Mysore Pak", 760.0);
+    Sweet sweets[2] = {
+        Sweet("Kaju Katli", 1600.0),
+        Sweet("Mysore Pak", 760.0)
+    };
 
-    // Display details of sweets
-    kajuKatli.displayDetails();
-    mysorePak.displayDetails();
+    // Display details of sweets using array
+    for (int i = 0; i < 2; ++i) {
+        sweets[i].displayDetails();
+    }
+
+    // Array of Customer objects
+    Customer customers[2] = {
+        Customer("Customer1", 0),
+        Customer("Customer2", 0)
+    };
 
     // Creating objects of Customer class with user input
     string customerName;
     double kgsWanted;
     string sweetChoice;
 
-    cout << "Enter customer name: ";
-    cin >> customerName;
-    cout << "Enter kilograms of sweets wanted: ";
-    cin >> kgsWanted;
-    Customer customer1(customerName, kgsWanted);
+    for (int i = 0; i < 2; ++i) {
+        cout << "Enter customer name for Customer " << (i + 1) << ": ";
+        cin >> customerName;
+        cout << "Enter kilograms of sweets wanted: ";
+        cin >> kgsWanted;
+        customers[i] = Customer(customerName, kgsWanted);
 
-    cout << "Choose a sweet (Kaju Katli/Mysore Pak): ";
-    cin.ignore(); // To ignore any newline character left in the buffer
-    getline(cin, sweetChoice);
+        cout << "Choose a sweet (Kaju Katli/Mysore Pak): ";
+        cin.ignore(); // To ignore any newline character left in the buffer
+        getline(cin, sweetChoice);
 
-    if (sweetChoice == "Kaju Katli") {
-        customer1.calculateTotalCost(kajuKatli);
-    } else if (sweetChoice == "Mysore Pak") {
-        customer1.calculateTotalCost(mysorePak);
-    } else {
-        cout << "Invalid choice!" << endl;
-        return 1;
+        if (sweetChoice == "Kaju Katli") {
+            customers[i].calculateTotalCost(sweets[0]);
+        } else if (sweetChoice == "Mysore Pak") {
+            customers[i].calculateTotalCost(sweets[1]);
+        } else {
+            cout << "Invalid choice!" << endl;
+            return 1;
+        }
+
+        customers[i].displayDetails();
+
+        // Update the kgs of sweets wanted by the customer using user input
+        double newKgsWanted;
+        cout << "Enter new kilograms of sweets wanted by " << customers[i].name << ": ";
+        cin >> newKgsWanted;
+        customers[i].updateKgsWanted(newKgsWanted);
+
+        if (sweetChoice == "Kaju Katli") {
+            customers[i].calculateTotalCost(sweets[0]);
+        } else if (sweetChoice == "Mysore Pak") {
+            customers[i].calculateTotalCost(sweets[1]);
+        }
+
+        customers[i].displayDetails();
     }
-
-    customer1.displayDetails();
-
-    // Update the kgs of sweets wanted by the customer using user input
-    double newKgsWanted;
-    cout << "Enter new kilograms of sweets wanted by " << customer1.name << ": ";
-    cin >> newKgsWanted;
-    customer1.updateKgsWanted(newKgsWanted);
-
-    if (sweetChoice == "Kaju Katli") {
-        customer1.calculateTotalCost(kajuKatli);
-    } else if (sweetChoice == "Mysore Pak") {
-        customer1.calculateTotalCost(mysorePak);
-    }
-
-    customer1.displayDetails();
 
     return 0;
 }
