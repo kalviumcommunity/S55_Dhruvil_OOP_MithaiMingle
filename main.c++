@@ -57,24 +57,19 @@ public:
 };
 
 int main() {
-    // Creating objects of Sweet class
-    Sweet sweets[2] = {
-        Sweet("Kaju Katli", 1600.0),
-        Sweet("Mysore Pak", 760.0)
-    };
+    // Dynamically allocate memory for Sweet objects
+    Sweet* sweets[2];
+    sweets[0] = new Sweet("Kaju Katli", 1600.0);
+    sweets[1] = new Sweet("Mysore Pak", 760.0);
 
-    // Display details of sweets using array
+    // Display details of sweets using dynamic objects
     for (int i = 0; i < 2; ++i) {
-        sweets[i].displayDetails();
+        sweets[i]->displayDetails();
     }
 
-    // Array of Customer objects
-    Customer customers[2] = {
-        Customer("Customer1", 0),
-        Customer("Customer2", 0)
-    };
-
-    // Creating objects of Customer class with user input
+    // Dynamically allocate memory for Customer objects
+    Customer* customers[2];
+    
     string customerName;
     double kgsWanted;
     string sweetChoice;
@@ -84,36 +79,47 @@ int main() {
         cin >> customerName;
         cout << "Enter kilograms of sweets wanted: ";
         cin >> kgsWanted;
-        customers[i] = Customer(customerName, kgsWanted);
+        customers[i] = new Customer(customerName, kgsWanted);
 
         cout << "Choose a sweet (Kaju Katli/Mysore Pak): ";
         cin.ignore(); // To ignore any newline character left in the buffer
         getline(cin, sweetChoice);
 
         if (sweetChoice == "Kaju Katli") {
-            customers[i].calculateTotalCost(sweets[0]);
+            customers[i]->calculateTotalCost(*sweets[0]);
         } else if (sweetChoice == "Mysore Pak") {
-            customers[i].calculateTotalCost(sweets[1]);
+            customers[i]->calculateTotalCost(*sweets[1]);
         } else {
             cout << "Invalid choice!" << endl;
+            // Free dynamically allocated memory before exiting
+            delete customers[i];
+            for (int j = 0; j < 2; ++j) {
+                delete sweets[j];
+            }
             return 1;
         }
 
-        customers[i].displayDetails();
+        customers[i]->displayDetails();
 
         // Update the kgs of sweets wanted by the customer using user input
         double newKgsWanted;
-        cout << "Enter new kilograms of sweets wanted by " << customers[i].name << ": ";
+        cout << "Enter new kilograms of sweets wanted by " << customers[i]->name << ": ";
         cin >> newKgsWanted;
-        customers[i].updateKgsWanted(newKgsWanted);
+        customers[i]->updateKgsWanted(newKgsWanted);
 
         if (sweetChoice == "Kaju Katli") {
-            customers[i].calculateTotalCost(sweets[0]);
+            customers[i]->calculateTotalCost(*sweets[0]);
         } else if (sweetChoice == "Mysore Pak") {
-            customers[i].calculateTotalCost(sweets[1]);
+            customers[i]->calculateTotalCost(*sweets[1]);
         }
 
-        customers[i].displayDetails();
+        customers[i]->displayDetails();
+    }
+
+    // Free dynamically allocated memory
+    for (int i = 0; i < 2; ++i) {
+        delete sweets[i];
+        delete customers[i];
     }
 
     return 0;
