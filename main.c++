@@ -33,11 +33,16 @@ public:
     double kgsWanted;
     double totalCost;
 
+    // Static variables
+    static int totalCustomers;
+    static double totalSweetsSold;
+
     // Constructor
     Customer(string n, double kgs) {
         this->name = n;
         this->kgsWanted = kgs;
         this->totalCost = 0.0;
+        totalCustomers++;  // Increment total customers
     }
 
     // Member function to display customer details
@@ -53,8 +58,19 @@ public:
     // Member function to calculate the total cost
     void calculateTotalCost(Sweet& sweet) {
         this->totalCost = this->kgsWanted * sweet.getPricePerKg();
+        totalSweetsSold += this->kgsWanted;  // Add to total sweets sold
+    }
+
+    // Static function to display summary
+    static void displaySummary() {
+        cout << "Total customers: " << totalCustomers << endl;
+        cout << "Total sweets sold: " << totalSweetsSold << " kg(s)" << endl;
     }
 };
+
+// Initialize static variables
+int Customer::totalCustomers = 0;
+double Customer::totalSweetsSold = 0.0;
 
 int main() {
     // Dynamically allocate memory for Sweet objects
@@ -67,22 +83,28 @@ int main() {
         sweets[i]->displayDetails();
     }
 
-    // Dynamically allocate memory for Customer objects
-    Customer* customers[2];
-    
+    int numCustomers;
+    cout << "Enter the number of customers: ";
+    cin >> numCustomers;
+
+    // Dynamically allocate memory for Customer objects based on user input
+    Customer** customers = new Customer*[numCustomers];
+
     string customerName;
     double kgsWanted;
     string sweetChoice;
 
-    for (int i = 0; i < 2; ++i) {
+    for (int i = 0; i < numCustomers; ++i) {
         cout << "Enter customer name for Customer " << (i + 1) << ": ";
-        cin >> customerName;
+        cin.ignore(); // Ignore the leftover newline character
+        getline(cin, customerName);
+
         cout << "Enter kilograms of sweets wanted: ";
         cin >> kgsWanted;
         customers[i] = new Customer(customerName, kgsWanted);
 
         cout << "Choose a sweet (Kaju Katli/Mysore Pak): ";
-        cin.ignore(); // To ignore any newline character left in the buffer
+        cin.ignore(); // Ignore the leftover newline character again
         getline(cin, sweetChoice);
 
         if (sweetChoice == "Kaju Katli") {
@@ -96,31 +118,54 @@ int main() {
             for (int j = 0; j < 2; ++j) {
                 delete sweets[j];
             }
+            delete[] customers;
             return 1;
         }
 
         customers[i]->displayDetails();
 
-        // Update the kgs of sweets wanted by the customer using user input
-        double newKgsWanted;
-        cout << "Enter new kilograms of sweets wanted by " << customers[i]->name << ": ";
-        cin >> newKgsWanted;
-        customers[i]->updateKgsWanted(newKgsWanted);
+        // Ask if the user wants to update the kgs of sweets
+        char updateChoice;
+        cout << "Do you want to update the kilograms of sweets wanted by " << customers[i]->name << "? (y/n): ";
+        cin >> updateChoice;
 
-        if (sweetChoice == "Kaju Katli") {
-            customers[i]->calculateTotalCost(*sweets[0]);
-        } else if (sweetChoice == "Mysore Pak") {
-            customers[i]->calculateTotalCost(*sweets[1]);
+        if (updateChoice == 'y' || updateChoice == 'Y') {
+            double newKgsWanted;
+            cout << "Enter new kilograms of sweets wanted by " << customers[i]->name << ": ";
+            cin >> newKgsWanted;
+            customers[i]->updateKgsWanted(newKgsWanted);
+
+            if (sweetChoice == "Kaju Katli") {
+                customers[i]->calculateTotalCost(*sweets[0]);
+            } else if (sweetChoice == "Mysore Pak") {
+                customers[i]->calculateTotalCost(*sweets[1]);
+            }
+
+            customers[i]->displayDetails();
         }
+        if (updateChoice == 'n' || updateChoice == 'N'){
+            if (sweetChoice == "Kaju Katli") {
+                customers[i]->calculateTotalCost(*sweets[0]);
+            } else if (sweetChoice == "Mysore Pak") {
+                customers[i]->calculateTotalCost(*sweets[1]);
+            }
 
-        customers[i]->displayDetails();
+            customers[i]->displayDetails();
+
+        }
     }
+
+    // Display summary of total customers and total sweets sold
+    Customer::displaySummary();
 
     // Free dynamically allocated memory
     for (int i = 0; i < 2; ++i) {
         delete sweets[i];
+    }
+    for (int i = 0; i < numCustomers; ++i) {
         delete customers[i];
     }
+    delete[] customers;
 
     return 0;
 }
