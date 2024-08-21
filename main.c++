@@ -130,29 +130,20 @@ int main() {
         cin >> updateChoice;
 
         if (updateChoice == 'y' || updateChoice == 'Y') {
-            double newKgsWanted;
-            cout << "Enter new kilograms of sweets wanted by " << customers[i]->name << ": ";
-            cin >> newKgsWanted;
-            customers[i]->updateKgsWanted(newKgsWanted);
+    double newKgsWanted;
+    cout << "Enter new kilograms of sweets wanted by " << customers[i]->name << ": ";
+    cin >> newKgsWanted;
+    customers[i]->updateKgsWanted(newKgsWanted);
 
-            if (sweetChoice == "Kaju Katli") {
-                customers[i]->calculateTotalCost(*sweets[0]);
-            } else if (sweetChoice == "Mysore Pak") {
-                customers[i]->calculateTotalCost(*sweets[1]);
-            }
+    if (sweetChoice == "Kaju Katli") {
+        customers[i]->calculateTotalCost(*sweets[0]);
+    } else if (sweetChoice == "Mysore Pak") {
+        customers[i]->calculateTotalCost(*sweets[1]);
+    }
 
-            customers[i]->displayDetails();
-        }
-        if (updateChoice == 'n' || updateChoice == 'N'){
-            if (sweetChoice == "Kaju Katli") {
-                customers[i]->calculateTotalCost(*sweets[0]);
-            } else if (sweetChoice == "Mysore Pak") {
-                customers[i]->calculateTotalCost(*sweets[1]);
-            }
+    customers[i]->displayDetails();
+}
 
-            customers[i]->displayDetails();
-
-        }
     }
 
     // Display summary of total customers and total sweets sold
