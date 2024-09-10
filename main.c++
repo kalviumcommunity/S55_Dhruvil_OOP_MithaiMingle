@@ -5,34 +5,51 @@ using namespace std;
 
 // Class definition for Sweet
 class Sweet {
-public:
+private:
     string name;
     double pricePerKg;
 
+public:
     // Constructor
     Sweet(string n, double p) {
         this->name = n;
         this->pricePerKg = p;
     }
 
-    // Member function to display details
-    void displayDetails() {
-        cout << "Sweet: " << this->name << ", Price per kg: ₹" << this->pricePerKg << endl;
+    // Accessor (Getter) for name
+    string getName() {
+        return name;
     }
 
-    // Member function to get the price per kg
+    // Mutator (Setter) for name
+    void setName(string newName) {
+        name = newName;
+    }
+
+    // Accessor (Getter) for pricePerKg
     double getPricePerKg() {
-        return this->pricePerKg;
+        return pricePerKg;
+    }
+
+    // Mutator (Setter) for pricePerKg
+    void setPricePerKg(double newPrice) {
+        pricePerKg = newPrice;
+    }
+
+    // Member function to display details
+    void displayDetails() {
+        cout << "Sweet: " << name << ", Price per kg: ₹" << pricePerKg << endl;
     }
 };
 
 // Class definition for Customer
 class Customer {
-public:
+private:
     string name;
     double kgsWanted;
     double totalCost;
 
+public:
     // Static variables
     static int totalCustomers;
     static double totalSweetsSold;
@@ -45,20 +62,40 @@ public:
         totalCustomers++;  // Increment total customers
     }
 
-    // Member function to display customer details
-    void displayDetails() {
-        cout << "Customer: " << this->name << ", Wants: " << this->kgsWanted << " kg(s) of sweet, Total Cost: ₹" << this->totalCost << endl;
+    // Accessor (Getter) for name
+    string getName() {
+        return name;
     }
 
-    // Member function to update kgs wanted
-    void updateKgsWanted(double newKgsWanted) {
-        this->kgsWanted = newKgsWanted;
+    // Mutator (Setter) for name
+    void setName(string newName) {
+        name = newName;
+    }
+
+    // Accessor (Getter) for kgsWanted
+    double getKgsWanted() {
+        return kgsWanted;
+    }
+
+    // Mutator (Setter) for kgsWanted
+    void setKgsWanted(double newKgsWanted) {
+        kgsWanted = newKgsWanted;
+    }
+
+    // Accessor (Getter) for totalCost
+    double getTotalCost() {
+        return totalCost;
     }
 
     // Member function to calculate the total cost
     void calculateTotalCost(Sweet& sweet) {
-        this->totalCost = this->kgsWanted * sweet.getPricePerKg();
-        totalSweetsSold += this->kgsWanted;  // Add to total sweets sold
+        totalCost = kgsWanted * sweet.getPricePerKg();
+        totalSweetsSold += kgsWanted;  // Add to total sweets sold
+    }
+
+    // Member function to display customer details
+    void displayDetails() {
+        cout << "Customer: " << name << ", Wants: " << kgsWanted << " kg(s) of sweet, Total Cost: ₹" << totalCost << endl;
     }
 
     // Static function to display summary
@@ -126,24 +163,23 @@ int main() {
 
         // Ask if the user wants to update the kgs of sweets
         char updateChoice;
-        cout << "Do you want to update the kilograms of sweets wanted by " << customers[i]->name << "? (y/n): ";
+        cout << "Do you want to update the kilograms of sweets wanted by " << customers[i]->getName() << "? (y/n): ";
         cin >> updateChoice;
 
         if (updateChoice == 'y' || updateChoice == 'Y') {
-    double newKgsWanted;
-    cout << "Enter new kilograms of sweets wanted by " << customers[i]->name << ": ";
-    cin >> newKgsWanted;
-    customers[i]->updateKgsWanted(newKgsWanted);
+            double newKgsWanted;
+            cout << "Enter new kilograms of sweets wanted by " << customers[i]->getName() << ": ";
+            cin >> newKgsWanted;
+            customers[i]->setKgsWanted(newKgsWanted);
 
-    if (sweetChoice == "Kaju Katli") {
-        customers[i]->calculateTotalCost(*sweets[0]);
-    } else if (sweetChoice == "Mysore Pak") {
-        customers[i]->calculateTotalCost(*sweets[1]);
-    }
+            if (sweetChoice == "Kaju Katli") {
+                customers[i]->calculateTotalCost(*sweets[0]);
+            } else if (sweetChoice == "Mysore Pak") {
+                customers[i]->calculateTotalCost(*sweets[1]);
+            }
 
-    customers[i]->displayDetails();
-}
-
+            customers[i]->displayDetails();
+        }
     }
 
     // Display summary of total customers and total sweets sold
