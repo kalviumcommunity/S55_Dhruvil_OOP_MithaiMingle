@@ -16,6 +16,11 @@ public:
         this->pricePerKg = p;
     }
 
+    // Destructor
+    ~Sweet() {
+        cout << "Destructor called for Sweet: " << name << endl;
+    }
+
     // Accessor (Getter) for name
     string getName() {
         return name;
@@ -60,6 +65,11 @@ public:
         this->kgsWanted = kgs;
         this->totalCost = 0.0;
         totalCustomers++;  // Increment total customers
+    }
+
+    // Destructor
+    ~Customer() {
+        cout << "Destructor called for Customer: " << name << endl;
     }
 
     // Accessor (Getter) for name
@@ -196,4 +206,3 @@ int main() {
 
     return 0;
 }
-
