@@ -5,11 +5,10 @@ using namespace std;
 
 // Class definition for Sweet
 class Sweet {
-private:
+public:  
     string name;
     double pricePerKg;
 
-public:
     // Constructor
     Sweet(string n, double p) {
         this->name = n;
@@ -21,26 +20,6 @@ public:
         cout << "Destructor called for Sweet: " << name << endl;
     }
 
-    // Accessor (Getter) for name
-    string getName() {
-        return name;
-    }
-
-    // Mutator (Setter) for name
-    void setName(string newName) {
-        name = newName;
-    }
-
-    // Accessor (Getter) for pricePerKg
-    double getPricePerKg() {
-        return pricePerKg;
-    }
-
-    // Mutator (Setter) for pricePerKg
-    void setPricePerKg(double newPrice) {
-        pricePerKg = newPrice;
-    }
-
     // Member function to display details
     void displayDetails() {
         cout << "Sweet: " << name << ", Price per kg: ₹" << pricePerKg << endl;
@@ -49,12 +28,11 @@ public:
 
 // Class definition for Customer
 class Customer {
-private:
+public:  
     string name;
     double kgsWanted;
     double totalCost;
 
-public:
     // Static variables
     static int totalCustomers;
     static double totalSweetsSold;
@@ -72,34 +50,9 @@ public:
         cout << "Destructor called for Customer: " << name << endl;
     }
 
-    // Accessor (Getter) for name
-    string getName() {
-        return name;
-    }
-
-    // Mutator (Setter) for name
-    void setName(string newName) {
-        name = newName;
-    }
-
-    // Accessor (Getter) for kgsWanted
-    double getKgsWanted() {
-        return kgsWanted;
-    }
-
-    // Mutator (Setter) for kgsWanted
-    void setKgsWanted(double newKgsWanted) {
-        kgsWanted = newKgsWanted;
-    }
-
-    // Accessor (Getter) for totalCost
-    double getTotalCost() {
-        return totalCost;
-    }
-
     // Member function to calculate the total cost
     void calculateTotalCost(Sweet& sweet) {
-        totalCost = kgsWanted * sweet.getPricePerKg();
+        totalCost = kgsWanted * sweet.pricePerKg;  // Directly accessing pricePerKg
         totalSweetsSold += kgsWanted;  // Add to total sweets sold
     }
 
@@ -173,14 +126,14 @@ int main() {
 
         // Ask if the user wants to update the kgs of sweets
         char updateChoice;
-        cout << "Do you want to update the kilograms of sweets wanted by " << customers[i]->getName() << "? (y/n): ";
+        cout << "Do you want to update the kilograms of sweets wanted by " << customers[i]->name << "? (y/n): ";
         cin >> updateChoice;
 
         if (updateChoice == 'y' || updateChoice == 'Y') {
             double newKgsWanted;
-            cout << "Enter new kilograms of sweets wanted by " << customers[i]->getName() << ": ";
+            cout << "Enter new kilograms of sweets wanted by " << customers[i]->name << ": ";
             cin >> newKgsWanted;
-            customers[i]->setKgsWanted(newKgsWanted);
+            customers[i]->kgsWanted = newKgsWanted;  // Directly updating the kgsWanted
 
             if (sweetChoice == "Kaju Katli") {
                 customers[i]->calculateTotalCost(*sweets[0]);
