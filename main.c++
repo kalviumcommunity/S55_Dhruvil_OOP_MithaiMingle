@@ -20,6 +20,26 @@ public:
         cout << "Destructor called for Sweet: " << name << endl;
     }
 
+    // Accessor (Getter) for name
+    string getName() {
+        return name;
+    }
+
+    // Mutator (Setter) for name
+    void setName(string newName) {
+        name = newName;
+    }
+
+    // Accessor (Getter) for pricePerKg
+    double getPricePerKg() {
+        return pricePerKg;
+    }
+
+    // Mutator (Setter) for pricePerKg
+    void setPricePerKg(double newPrice) {
+        pricePerKg = newPrice;
+    }
+
     // Member function to display details
     void displayDetails() {
         cout << "Sweet: " << name << ", Price per kg: ₹" << pricePerKg << endl;
@@ -48,6 +68,31 @@ public:
     // Destructor
     ~Customer() {
         cout << "Destructor called for Customer: " << name << endl;
+    }
+
+    // Accessor (Getter) for name
+    string getName() {
+        return name;
+    }
+
+    // Mutator (Setter) for name
+    void setName(string newName) {
+        name = newName;
+    }
+
+    // Accessor (Getter) for kgsWanted
+    double getKgsWanted() {
+        return kgsWanted;
+    }
+
+    // Mutator (Setter) for kgsWanted
+    void setKgsWanted(double newKgsWanted) {
+        kgsWanted = newKgsWanted;
+    }
+
+    // Accessor (Getter) for totalCost
+    double getTotalCost() {
+        return totalCost;
     }
 
     // Member function to calculate the total cost
@@ -133,7 +178,7 @@ int main() {
             double newKgsWanted;
             cout << "Enter new kilograms of sweets wanted by " << customers[i]->name << ": ";
             cin >> newKgsWanted;
-            customers[i]->kgsWanted = newKgsWanted;  // Directly updating the kgsWanted
+            customers[i]->setKgsWanted(newKgsWanted);  // Updating using mutator method
 
             if (sweetChoice == "Kaju Katli") {
                 customers[i]->calculateTotalCost(*sweets[0]);
