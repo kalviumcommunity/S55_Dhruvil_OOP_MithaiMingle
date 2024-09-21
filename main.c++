@@ -5,11 +5,10 @@ using namespace std;
 
 // Class definition for Sweet
 class Sweet {
-private:
+public:  
     string name;
     double pricePerKg;
 
-public:
     // Constructor
     Sweet(string n, double p) {
         this->name = n;
@@ -49,12 +48,11 @@ public:
 
 // Class definition for Customer
 class Customer {
-private:
+public:  
     string name;
     double kgsWanted;
     double totalCost;
 
-public:
     // Static variables
     static int totalCustomers;
     static double totalSweetsSold;
@@ -99,7 +97,7 @@ public:
 
     // Member function to calculate the total cost
     void calculateTotalCost(Sweet& sweet) {
-        totalCost = kgsWanted * sweet.getPricePerKg();
+        totalCost = kgsWanted * sweet.pricePerKg;  // Directly accessing pricePerKg
         totalSweetsSold += kgsWanted;  // Add to total sweets sold
     }
 
@@ -173,14 +171,14 @@ int main() {
 
         // Ask if the user wants to update the kgs of sweets
         char updateChoice;
-        cout << "Do you want to update the kilograms of sweets wanted by " << customers[i]->getName() << "? (y/n): ";
+        cout << "Do you want to update the kilograms of sweets wanted by " << customers[i]->name << "? (y/n): ";
         cin >> updateChoice;
 
         if (updateChoice == 'y' || updateChoice == 'Y') {
             double newKgsWanted;
-            cout << "Enter new kilograms of sweets wanted by " << customers[i]->getName() << ": ";
+            cout << "Enter new kilograms of sweets wanted by " << customers[i]->name << ": ";
             cin >> newKgsWanted;
-            customers[i]->setKgsWanted(newKgsWanted);
+            customers[i]->setKgsWanted(newKgsWanted);  // Updating using mutator method
 
             if (sweetChoice == "Kaju Katli") {
                 customers[i]->calculateTotalCost(*sweets[0]);
