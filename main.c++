@@ -51,7 +51,7 @@ public:
     }
 };
 
-// Derived class for discounted sweets (Single Inheritance)
+// Derived class for discounted sweets
 class DiscountedSweet : public Sweet {
 private:
     double discountRate;
@@ -59,24 +59,23 @@ private:
 public:
     DiscountedSweet(string n, double p, double d) : Sweet(n, p), discountRate(d) {}
 
-    // Override to display discounted sweet details
-    void displayDetails() override {
-        cout << "Sweet: " << name << ", Price per kg: ₹" << pricePerKg << ", Discount rate: " << discountRate * 100 << "%" << endl;
-    }
-
-    // Function to calculate price with discount
     double getDiscountedPrice() {
         return pricePerKg * (1 - discountRate);
     }
+
+    void displayDetails() override {
+        cout << "Sweet: " << name << ", Price per kg: ₹" << pricePerKg << ", Discount: " << discountRate * 100 << "%" << endl;
+    }
 };
 
-// Class definition for Customer (Multilevel Inheritance from Person)
+// Class definition for Customer inheriting from Person
 class Customer : public Person {
 private:
     double kgsWanted;
     double totalCost;
 
 public:
+    // Static variables
     static int totalCustomers;
     static double totalSweetsSold;
 
@@ -93,10 +92,9 @@ public:
     // Function to calculate the total cost
     void calculateTotalCost(Sweet& sweet) {
         totalCost = kgsWanted * sweet.getPricePerKg();
-        totalSweetsSold += kgsWanted;
+        totalSweetsSold += kgsWanted;  // Add to total sweets sold
     }
 
-    // Overloaded function to calculate cost with discount
     void calculateTotalCost(DiscountedSweet& sweet) {
         totalCost = kgsWanted * sweet.getDiscountedPrice();
         totalSweetsSold += kgsWanted;
@@ -105,6 +103,10 @@ public:
     // Function to display customer details
     void displayDetails() {
         cout << "Customer: " << name << ", Wants: " << kgsWanted << " kg(s) of sweet, Total Cost: ₹" << totalCost << endl;
+    }
+
+    void setKgsWanted(double kgs) {
+        kgsWanted = kgs;
     }
 
     // Static function to display summary
@@ -156,7 +158,7 @@ int main() {
         if (sweetChoice == "Kaju Katli") {
             customers[i]->calculateTotalCost(*sweets[0]);
         } else if (sweetChoice == "Mysore Pak") {
-            customers[i]->calculateTotalCost(*dynamic_cast<DiscountedSweet*>(sweets[1])); // Discount applied
+            customers[i]->calculateTotalCost(*static_cast<DiscountedSweet*>(sweets[1]));
         } else {
             cout << "Invalid choice!" << endl;
             delete customers[i];
@@ -168,6 +170,26 @@ int main() {
         }
 
         customers[i]->displayDetails();
+
+        // Ask if the user wants to update the kgs of sweets
+        char updateChoice;
+        cout << "Do you want to update the kilograms of sweets wanted by " << customers[i]->getName() << "? (y/n): ";
+        cin >> updateChoice;
+
+        if (updateChoice == 'y' || updateChoice == 'Y') {
+            double newKgsWanted;
+            cout << "Enter new kilograms of sweets wanted by " << customers[i]->getName() << ": ";
+            cin >> newKgsWanted;
+            customers[i]->setKgsWanted(newKgsWanted);
+
+            if (sweetChoice == "Kaju Katli") {
+                customers[i]->calculateTotalCost(*sweets[0]);
+            } else if (sweetChoice == "Mysore Pak") {
+                customers[i]->calculateTotalCost(*static_cast<DiscountedSweet*>(sweets[1]));
+            }
+
+            customers[i]->displayDetails();
+        }
     }
 
     // Display summary
