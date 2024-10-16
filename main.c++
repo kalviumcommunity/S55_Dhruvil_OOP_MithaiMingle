@@ -89,14 +89,21 @@ public:
         cout << "Destructor called for Customer: " << name << endl;
     }
 
-    // Function to calculate the total cost
+    // Function to calculate the total cost (for regular sweets)
     void calculateTotalCost(Sweet& sweet) {
         totalCost = kgsWanted * sweet.getPricePerKg();
-        totalSweetsSold += kgsWanted;  // Add to total sweets sold
+        totalSweetsSold += kgsWanted;
     }
 
+    // Overloaded function to calculate total cost for discounted sweets
     void calculateTotalCost(DiscountedSweet& sweet) {
         totalCost = kgsWanted * sweet.getDiscountedPrice();
+        totalSweetsSold += kgsWanted;
+    }
+
+    // Overloaded function to calculate total cost using a manual price per kg (polymorphism demonstration)
+    void calculateTotalCost(double pricePerKg) {
+        totalCost = kgsWanted * pricePerKg;
         totalSweetsSold += kgsWanted;
     }
 
@@ -155,18 +162,30 @@ int main() {
         cin.ignore();
         getline(cin, sweetChoice);
 
-        if (sweetChoice == "Kaju Katli") {
-            customers[i]->calculateTotalCost(*sweets[0]);
-        } else if (sweetChoice == "Mysore Pak") {
-            customers[i]->calculateTotalCost(*static_cast<DiscountedSweet*>(sweets[1]));
+        // Asking for manual price input to demonstrate polymorphism
+        cout << "Would you like to manually enter the price per kg for the sweet? (y/n): ";
+        char priceInput;
+        cin >> priceInput;
+
+        if (priceInput == 'y' || priceInput == 'Y') {
+            double manualPrice;
+            cout << "Enter price per kg: ";
+            cin >> manualPrice;
+            customers[i]->calculateTotalCost(manualPrice);
         } else {
-            cout << "Invalid choice!" << endl;
-            delete customers[i];
-            for (int j = 0; j < 2; ++j) {
-                delete sweets[j];
+            if (sweetChoice == "Kaju Katli") {
+                customers[i]->calculateTotalCost(*sweets[0]);
+            } else if (sweetChoice == "Mysore Pak") {
+                customers[i]->calculateTotalCost(*static_cast<DiscountedSweet*>(sweets[1]));
+            } else {
+                cout << "Invalid choice!" << endl;
+                delete customers[i];
+                for (int j = 0; j < 2; ++j) {
+                    delete sweets[j];
+                }
+                delete[] customers;
+                return 1;
             }
-            delete[] customers;
-            return 1;
         }
 
         customers[i]->displayDetails();
