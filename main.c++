@@ -101,13 +101,36 @@ public:
 };
 
 int main() {
-    Sweet kajuKatli("Kaju Katli", 1600.0);
-    DiscountedSweet mysorePak("Mysore Pak", 760.0, 0.10);
+    string sweetName;
+    double pricePerKg, discountRate, kgsWanted;
+    string customerName;
 
+    cout << "Enter sweet name: ";
+    getline(cin, sweetName);
+    cout << "Enter price per kg of " << sweetName << ": ";
+    cin >> pricePerKg;
+
+    Sweet kajuKatli(sweetName, pricePerKg);
     kajuKatli.displayDetails();
+
+    cout << "Enter discounted sweet name: ";
+    cin.ignore();
+    getline(cin, sweetName);
+    cout << "Enter price per kg of " << sweetName << ": ";
+    cin >> pricePerKg;
+    cout << "Enter discount rate (as a decimal): ";
+    cin >> discountRate;
+
+    DiscountedSweet mysorePak(sweetName, pricePerKg, discountRate);
     mysorePak.displayDetails();
 
-    Customer customer("Amit", 2.0);
+    cout << "Enter customer name: ";
+    cin.ignore();
+    getline(cin, customerName);
+    cout << "Enter kgs wanted by " << customerName << ": ";
+    cin >> kgsWanted;
+
+    Customer customer(customerName, kgsWanted);
 
     customer.updateTotalCost(kajuKatli);
     customer.displayDetails();
