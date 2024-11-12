@@ -10,7 +10,7 @@ protected:
 public:
     Person(string n) : name(n) {}
 
-    string getName() {
+    string getName() const {
         return name;
     }
 
@@ -23,7 +23,7 @@ public:
     }
 };
 
-// Class definition for Sweet
+// Abstract Sweet class
 class Sweet {
 protected:
     string name;
@@ -40,11 +40,16 @@ public:
         return pricePerKg;
     }
 
+    virtual double calculateFinalPrice(double kgsWanted) const {
+        return kgsWanted * pricePerKg;
+    }
+
     virtual void displayDetails() const {
         cout << "Sweet: " << name << ", Price per kg: ₹" << pricePerKg << endl;
     }
 };
 
+// DiscountedSweet inherits Sweet and overrides price calculation
 class DiscountedSweet : public Sweet {
 private:
     double discountRate;
@@ -52,8 +57,8 @@ private:
 public:
     DiscountedSweet(string n, double p, double d) : Sweet(n, p), discountRate(d) {}
 
-    double getDiscountedPrice() const {
-        return pricePerKg * (1 - discountRate);
+    double calculateFinalPrice(double kgsWanted) const override {
+        return kgsWanted * pricePerKg * (1 - discountRate);
     }
 
     void displayDetails() const override {
@@ -65,15 +70,11 @@ public:
 class Order {
 public:
     static double calculateTotalCost(double kgsWanted, const Sweet& sweet) {
-        return kgsWanted * sweet.getPricePerKg();
-    }
-
-    static double calculateTotalCost(double kgsWanted, const DiscountedSweet& sweet) {
-        return kgsWanted * sweet.getDiscountedPrice();
+        return sweet.calculateFinalPrice(kgsWanted);
     }
 };
 
-// Class definition for Customer inheriting from Person
+// Customer class inheriting from Person
 class Customer : public Person {
 private:
     double kgsWanted;
@@ -94,27 +95,20 @@ public:
     void updateTotalCost(const Sweet& sweet) {
         totalCost = Order::calculateTotalCost(kgsWanted, sweet);
     }
-
-    void updateTotalCost(const DiscountedSweet& sweet) {
-        totalCost = Order::calculateTotalCost(kgsWanted, sweet);
-    }
 };
 
 int main() {
-    // Sweet and DiscountedSweet instances
     Sweet kajuKatli("Kaju Katli", 1600.0);
     DiscountedSweet mysorePak("Mysore Pak", 760.0, 0.10);
 
     kajuKatli.displayDetails();
     mysorePak.displayDetails();
 
-    Customer customer("Amit", 2.0);  // Example customer
+    Customer customer("Amit", 2.0);
 
-    // Calculating cost with Sweet
     customer.updateTotalCost(kajuKatli);
     customer.displayDetails();
 
-    // Calculating cost with DiscountedSweet
     customer.updateTotalCost(mysorePak);
     customer.displayDetails();
 
