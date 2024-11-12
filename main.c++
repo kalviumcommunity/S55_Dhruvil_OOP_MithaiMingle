@@ -40,6 +40,7 @@ public:
         return pricePerKg;
     }
 
+    // Virtual method to allow overriding in derived classes
     virtual double calculateFinalPrice(double kgsWanted) const {
         return kgsWanted * pricePerKg;
     }
@@ -49,7 +50,7 @@ public:
     }
 };
 
-// DiscountedSweet inherits Sweet and overrides price calculation
+// DiscountedSweet inherits Sweet and maintains the interface consistency
 class DiscountedSweet : public Sweet {
 private:
     double discountRate;
@@ -57,6 +58,7 @@ private:
 public:
     DiscountedSweet(string n, double p, double d) : Sweet(n, p), discountRate(d) {}
 
+    // Overriding calculateFinalPrice to include discount
     double calculateFinalPrice(double kgsWanted) const override {
         return kgsWanted * pricePerKg * (1 - discountRate);
     }
@@ -69,6 +71,7 @@ public:
 // Order class managing orders and cost calculations
 class Order {
 public:
+    // Method compatible with any class derived from Sweet
     static double calculateTotalCost(double kgsWanted, const Sweet& sweet) {
         return sweet.calculateFinalPrice(kgsWanted);
     }
