@@ -1,58 +1,6 @@
 #include <iostream>
 #include <string>
-
 using namespace std;
-
-// Abstract class Sweet
-class Sweet {
-protected:
-    string name;
-    double pricePerKg;
-
-public:
-    // Constructor
-    Sweet(string n, double p) : name(n), pricePerKg(p) {}
-
-    // Virtual destructor
-    virtual ~Sweet() {
-        cout << "Destructor called for Sweet: " << name << endl;
-    }
-
-    // Pure virtual function to display sweet details (abstract method)
-    virtual void displayDetails() = 0;
-
-    // Accessor for price
-    double getPricePerKg() {
-        return pricePerKg;
-    }
-};
-
-// Derived class for regular sweets
-class RegularSweet : public Sweet {
-public:
-    RegularSweet(string n, double p) : Sweet(n, p) {}
-
-    void displayDetails() override {
-        cout << "Sweet: " << name << ", Price per kg: ₹" << pricePerKg << endl;
-    }
-};
-
-// Derived class for discounted sweets
-class DiscountedSweet : public Sweet {
-private:
-    double discountRate;
-
-public:
-    DiscountedSweet(string n, double p, double d) : Sweet(n, p), discountRate(d) {}
-
-    double getDiscountedPrice() {
-        return pricePerKg * (1 - discountRate);
-    }
-
-    void displayDetails() override {
-        cout << "Sweet: " << name << ", Price per kg: ₹" << pricePerKg << ", Discount: " << discountRate * 100 << "%" << endl;
-    }
-};
 
 // Base class Person
 class Person {
@@ -70,9 +18,58 @@ public:
         name = newName;
     }
 
-    // Destructor for Person
     virtual ~Person() {
         cout << "Destructor called for Person: " << name << endl;
+    }
+};
+
+// Class definition for Sweet
+class Sweet {
+protected:
+    string name;
+    double pricePerKg;
+
+public:
+    Sweet(string n, double p) : name(n), pricePerKg(p) {}
+
+    virtual ~Sweet() {
+        cout << "Destructor called for Sweet: " << name << endl;
+    }
+
+    double getPricePerKg() const {
+        return pricePerKg;
+    }
+
+    virtual void displayDetails() const {
+        cout << "Sweet: " << name << ", Price per kg: ₹" << pricePerKg << endl;
+    }
+};
+
+class DiscountedSweet : public Sweet {
+private:
+    double discountRate;
+
+public:
+    DiscountedSweet(string n, double p, double d) : Sweet(n, p), discountRate(d) {}
+
+    double getDiscountedPrice() const {
+        return pricePerKg * (1 - discountRate);
+    }
+
+    void displayDetails() const override {
+        cout << "Sweet: " << name << ", Price per kg: ₹" << pricePerKg << ", Discount: " << discountRate * 100 << "%" << endl;
+    }
+};
+
+// Order class managing orders and cost calculations
+class Order {
+public:
+    static double calculateTotalCost(double kgsWanted, const Sweet& sweet) {
+        return kgsWanted * sweet.getPricePerKg();
+    }
+
+    static double calculateTotalCost(double kgsWanted, const DiscountedSweet& sweet) {
+        return kgsWanted * sweet.getDiscountedPrice();
     }
 };
 
@@ -83,109 +80,43 @@ private:
     double totalCost;
 
 public:
-    // Static variables
-    static int totalCustomers;
-    static double totalSweetsSold;
-
-    // Constructor
-    Customer(string n, double kgs) : Person(n), kgsWanted(kgs), totalCost(0.0) {
-        totalCustomers++;
-    }
-
-    // Destructor
-    ~Customer() {
-        cout << "Destructor called for Customer: " << name << endl;
-    }
-
-    // Function to calculate total cost for sweet
-    void calculateTotalCost(Sweet& sweet) {
-        totalCost = kgsWanted * sweet.getPricePerKg();
-        totalSweetsSold += kgsWanted;
-    }
-
-    // Function to display customer details
-    void displayDetails() {
-        cout << "Customer: " << name << ", Wants: " << kgsWanted << " kg(s) of sweet, Total Cost: ₹" << totalCost << endl;
-    }
+    Customer(string n, double kgs) : Person(n), kgsWanted(kgs), totalCost(0.0) {}
 
     void setKgsWanted(double kgs) {
         kgsWanted = kgs;
     }
 
-    // Static function to display summary
-    static void displaySummary() {
-        cout << "Total customers: " << totalCustomers << endl;
-        cout << "Total sweets sold: " << totalSweetsSold << " kg(s)" << endl;
+    void displayDetails() const {
+        cout << "Customer: " << name << ", Wants: " << kgsWanted << " kg(s) of sweet, Total Cost: ₹" << totalCost << endl;
+    }
+
+    // Calculate and update total cost using Order class
+    void updateTotalCost(const Sweet& sweet) {
+        totalCost = Order::calculateTotalCost(kgsWanted, sweet);
+    }
+
+    void updateTotalCost(const DiscountedSweet& sweet) {
+        totalCost = Order::calculateTotalCost(kgsWanted, sweet);
     }
 };
 
-// Initialize static variables
-int Customer::totalCustomers = 0;
-double Customer::totalSweetsSold = 0.0;
-
 int main() {
-    // Create RegularSweet and DiscountedSweet objects
-    Sweet* sweets[2];
-    sweets[0] = new RegularSweet("Kaju Katli", 1600.0);
-    sweets[1] = new DiscountedSweet("Mysore Pak", 760.0, 0.10); // 10% discount
+    // Sweet and DiscountedSweet instances
+    Sweet kajuKatli("Kaju Katli", 1600.0);
+    DiscountedSweet mysorePak("Mysore Pak", 760.0, 0.10);
 
-    // Display details of sweets
-    for (int i = 0; i < 2; ++i) {
-        sweets[i]->displayDetails();
-    }
+    kajuKatli.displayDetails();
+    mysorePak.displayDetails();
 
-    int numCustomers;
-    cout << "Enter the number of customers: ";
-    cin >> numCustomers;
+    Customer customer("Amit", 2.0);  // Example customer
 
-    // Dynamically allocate memory for Customer objects based on user input
-    Customer** customers = new Customer*[numCustomers];
+    // Calculating cost with Sweet
+    customer.updateTotalCost(kajuKatli);
+    customer.displayDetails();
 
-    string customerName;
-    double kgsWanted;
-    string sweetChoice;
-
-    for (int i = 0; i < numCustomers; ++i) {
-        cout << "Enter customer name for Customer " << (i + 1) << ": ";
-        cin.ignore();
-        getline(cin, customerName);
-
-        cout << "Enter kilograms of sweets wanted: ";
-        cin >> kgsWanted;
-        customers[i] = new Customer(customerName, kgsWanted);
-
-        cout << "Choose a sweet (Kaju Katli/Mysore Pak): ";
-        cin.ignore();
-        getline(cin, sweetChoice);
-
-        if (sweetChoice == "Kaju Katli") {
-            customers[i]->calculateTotalCost(*sweets[0]);
-        } else if (sweetChoice == "Mysore Pak") {
-            customers[i]->calculateTotalCost(*sweets[1]);
-        } else {
-            cout << "Invalid choice!" << endl;
-            delete customers[i];
-            for (int j = 0; j < 2; ++j) {
-                delete sweets[j];
-            }
-            delete[] customers;
-            return 1;
-        }
-
-        customers[i]->displayDetails();
-    }
-
-    // Display summary
-    Customer::displaySummary();
-
-    // Free memory
-    for (int i = 0; i < 2; ++i) {
-        delete sweets[i];
-    }
-    for (int i = 0; i < numCustomers; ++i) {
-        delete customers[i];
-    }
-    delete[] customers;
+    // Calculating cost with DiscountedSweet
+    customer.updateTotalCost(mysorePak);
+    customer.displayDetails();
 
     return 0;
 }
